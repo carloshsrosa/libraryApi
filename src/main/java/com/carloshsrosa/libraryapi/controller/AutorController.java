@@ -7,6 +7,7 @@ import com.carloshsrosa.libraryapi.exceptions.AutorPossuiLivrosException;
 import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
 import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.service.AutorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class AutorController {
     private AutorService service;
 
     @PostMapping
-    public ResponseEntity<?> salvarAutor(@RequestBody AutorDTO autorDTO) {
+    public ResponseEntity<?> salvarAutor(@RequestBody @Valid AutorDTO autorDTO) {
         try {
             var autor = service.salvarAutor(autorDTO.mapearAutor());
             if (autor == null) {
@@ -79,7 +80,7 @@ public class AutorController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> atualiza(@PathVariable("id") String id, @RequestBody AutorDTO autorDTO){
+    public ResponseEntity<Object> atualiza(@PathVariable("id") String id, @RequestBody @Valid AutorDTO autorDTO){
         try {
             var uuid = UUID.fromString(id);
             var autor = service.consultarPorId(uuid);

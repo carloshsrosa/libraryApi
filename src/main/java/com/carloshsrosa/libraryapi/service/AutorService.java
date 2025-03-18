@@ -6,13 +6,17 @@ import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
 import com.carloshsrosa.libraryapi.validator.AutorPossuiLivrosValidator;
 import com.carloshsrosa.libraryapi.validator.AutorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+//@RequiredArgsConstructor -- loombok
 @Service
 public class AutorService {
     @Autowired
@@ -43,17 +47,19 @@ public class AutorService {
     }
 
     public List<Autor> consultarPorParametros(String nome, String nacionalidade) {
-        if (nome != null && nacionalidade != null) {
-            return repository.findByNomeContainingIgnoreCaseAndNacionalidadeContainingIgnoreCase(nome, nacionalidade);
-        }
-        if (nome != null) {
-            return repository.findByNomeContainingIgnoreCase(nome);
-        }
-        if (nacionalidade != null) {
-            return repository.findByNacionalidadeContainingIgnoreCase(nacionalidade);
-        }
+        var autor = new Autor();
+        autor.setNome(nome);
+        autor.setNacionalidade(nacionalidade);
 
-        return repository.findAll();
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnorePaths("id", "dataNascimento")
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example<Autor> autorExample = Example.of(autor, matcher);
+        return repository.findAll(autorExample);
     }
 
     public void atualiza(Autor autor) {
