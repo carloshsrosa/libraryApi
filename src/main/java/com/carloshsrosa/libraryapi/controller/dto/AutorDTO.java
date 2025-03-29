@@ -1,6 +1,5 @@
 package com.carloshsrosa.libraryapi.controller.dto;
 
-import com.carloshsrosa.libraryapi.model.Autor;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -19,11 +18,4 @@ public record AutorDTO(
         @Size(min = 2, max = 50, message = "campo fora do tamanho padrão")
         String nacionalidade) {
 
-    public Autor mapearAutor(){
-        var autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setDataNascimento(this.dataNascimento);
-        autor.setNacionalidade(this.nacionalidade);
-        return autor;
-    }
 }

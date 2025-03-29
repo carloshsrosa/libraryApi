@@ -4,7 +4,11 @@ import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
 import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class AutorValidator {
@@ -13,12 +17,16 @@ public class AutorValidator {
     private AutorRepository repository;
 
     public boolean validar(Autor autor){
-        var autorExistente = repository.findByNomeContainingIgnoreCaseAndDataNascimentoAndNacionalidadeContainingIgnoreCase(autor.getNome(), autor.getDataNascimento(), autor.getNacionalidade());
-        if (autor.getId() == null) {
-            return autorExistente.isPresent();
-        }
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnorePaths("id", "dataNascimento")
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
-        return !(autor.getId().equals(autorExistente.get().getId())) && autorExistente.isPresent();
+        Example<Autor> autorExample = Example.of(autor, matcher);
+        List<Autor> listAutor = repository.findAll(autorExample);
+        return !listAutor.isEmpty();
     }
 
 }

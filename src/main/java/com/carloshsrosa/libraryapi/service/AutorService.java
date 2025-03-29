@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 //@RequiredArgsConstructor -- loombok
 @Service
 public class AutorService {
+
     @Autowired
     private AutorRepository repository;
 
@@ -35,8 +37,8 @@ public class AutorService {
         return repository.save(autor);
     }
 
-    public Autor consultarPorId(UUID uuid) {
-        return repository.findById(uuid).orElse(null);
+    public Optional<Autor> consultarPorId(UUID uuid) {
+        return repository.findById(uuid);
     }
 
     public void deletarPorId(UUID uuid) {
@@ -63,9 +65,10 @@ public class AutorService {
     }
 
     public void atualiza(Autor autor) {
-        if (validator.validar(autor)){
-            throw new RegistroDuplicadoException("Autor já existente");
+        if (autor.getId() == null){
+            throw new IllegalArgumentException("Para atualizar, é necessário que o autor já esteja na cadastrado!");
         }
+        validator.validar(autor);
         repository.save(autor);
     }
 }

@@ -18,8 +18,8 @@ public class AutorPossuiLivrosValidator {
     private LivroRepository livroRepository;
 
     public boolean validar(UUID uuid){
-        var autor = autorRepository.findById(uuid).orElse(null);
-        if (autor != null) {
+        var autor = autorRepository.findById(uuid);
+        if (autor.isPresent()) {
             return livroRepository.existsByAutor(autor);
         }
         return false;
