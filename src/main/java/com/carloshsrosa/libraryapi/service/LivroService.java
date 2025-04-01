@@ -6,6 +6,9 @@ import com.carloshsrosa.libraryapi.model.Livro;
 import com.carloshsrosa.libraryapi.repository.LivroRepository;
 import com.carloshsrosa.libraryapi.validator.LivroValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +28,7 @@ public class LivroService {
     private LivroValidator validator;
 
     public Livro salvarLivro(Livro livro) {
-        if (validator.validar(livro)) {
-            throw new RegistroDuplicadoException("Livro já existente");
-        }
+        validator.validar(livro);
         return repository.save(livro);
     }
 
@@ -39,7 +40,15 @@ public class LivroService {
         repository.deleteById(uuid);
     }
 
-    public List<Livro> consultarPorParametros(String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao){
+    public Page<Livro> consultarPorParametros(
+            String isbn,
+            String titulo,
+            String nomeAutor,
+            GeneroLivro genero,
+            Integer anoPublicacao,
+            Integer page,
+            Integer size
+    ){
 
         Specification<Livro> specs = Specification.where((root, query, cb) -> cb.conjunction());
 
@@ -63,16 +72,15 @@ public class LivroService {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
-        return repository.findAll(specs);
+        var pagerequest = PageRequest.of(page, size);
+        return repository.findAll(specs, pagerequest);
     }
 
     public void atualiza(Livro livro) {
         if (livro.getId() == null){
             throw new IllegalArgumentException("Para atualizar, é necessário que o livro já esteja na cadastrado!");
         }
-        if (validator.validarIsbn(livro)) {
-            throw new RegistroDuplicadoException("ISBN pertence a outro livro");
-        }
+        validator.validar(livro);
         repository.save(livro);
     }
 }

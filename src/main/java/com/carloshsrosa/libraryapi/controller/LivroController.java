@@ -11,6 +11,7 @@ import com.carloshsrosa.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,22 +52,20 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ResultadoPesquisaLivroDTO>> consultarPorParametros(
+    public ResponseEntity<Page<ResultadoPesquisaLivroDTO>> consultarPorParametros(
             @RequestParam(value = "isbn", required = false) String isbn,
             @RequestParam(value = "titulo", required = false) String titulo,
             @RequestParam(value = "nome-autor", required = false) String nomeAutor,
             @RequestParam(value = "genero", required = false) GeneroLivro genero,
-            @RequestParam(value = "ano-publicacao", required = false) Integer anoPublicacao
+            @RequestParam(value = "ano-publicacao", required = false) Integer anoPublicacao,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size
     ){
-        var livros = service.consultarPorParametros(isbn, titulo, nomeAutor, genero, anoPublicacao);
-        if (livros == null) {
-            return ResponseEntity.ok(new ArrayList<>());
-        }
-        List<ResultadoPesquisaLivroDTO> livrosDTOResposta = livros
-                .stream()
-                .map(mapper::toDTO)
-                .toList();
-        return ResponseEntity.ok(livrosDTOResposta);
+        var livros = service.consultarPorParametros(isbn, titulo, nomeAutor, genero, anoPublicacao, page, size);
+
+        var resultado = livros.map(mapper::toDTO);
+
+        return ResponseEntity.ok(resultado);
     }
 
     @PutMapping("{id}")

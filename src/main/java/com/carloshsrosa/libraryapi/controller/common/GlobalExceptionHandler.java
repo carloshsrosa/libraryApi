@@ -3,6 +3,7 @@ package com.carloshsrosa.libraryapi.controller.common;
 import com.carloshsrosa.libraryapi.controller.dto.ErroCampoDTO;
 import com.carloshsrosa.libraryapi.controller.dto.ErroRespostaDTO;
 import com.carloshsrosa.libraryapi.exceptions.AutorPossuiLivrosException;
+import com.carloshsrosa.libraryapi.exceptions.CampoInvalidoException;
 import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -37,6 +38,15 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErroRespostaDTO handlerAutorPossuiLivrosException(AutorPossuiLivrosException e) {
         return ErroRespostaDTO.respostaPadrao(e.getMessage());
+    }
+
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroRespostaDTO handlerCampoInvalidoExcpetion(CampoInvalidoException e) {
+        return new ErroRespostaDTO(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Erro de validação",
+                List.of(new ErroCampoDTO(e.getCampo(), e.getMessage())));
     }
 
     @ExceptionHandler(RuntimeException.class)
