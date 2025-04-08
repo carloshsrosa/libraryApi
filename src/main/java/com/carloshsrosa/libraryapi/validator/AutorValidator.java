@@ -1,6 +1,5 @@
 package com.carloshsrosa.libraryapi.validator;
 
-import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
 import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,9 +2,9 @@ package com.carloshsrosa.libraryapi.exceptions;
 
 import lombok.Getter;
 
+@Getter
 public class CampoInvalidoException extends RuntimeException {
 
-    @Getter
     private String campo;
 
     public CampoInvalidoException(String campo, String message) {

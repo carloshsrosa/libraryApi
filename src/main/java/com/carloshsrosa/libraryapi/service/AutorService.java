@@ -6,13 +6,11 @@ import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
 import com.carloshsrosa.libraryapi.validator.AutorPossuiLivrosValidator;
 import com.carloshsrosa.libraryapi.validator.AutorValidator;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

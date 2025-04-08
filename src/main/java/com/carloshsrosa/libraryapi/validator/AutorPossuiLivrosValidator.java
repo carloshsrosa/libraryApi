@@ -1,6 +1,5 @@
 package com.carloshsrosa.libraryapi.validator;
 
-import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
 import com.carloshsrosa.libraryapi.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;

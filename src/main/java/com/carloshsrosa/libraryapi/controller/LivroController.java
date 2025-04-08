@@ -1,6 +1,5 @@
 package com.carloshsrosa.libraryapi.controller;
 
-import com.carloshsrosa.libraryapi.controller.dto.AutorDTOResposta;
 import com.carloshsrosa.libraryapi.controller.dto.CadastroLivroDTO;
 import com.carloshsrosa.libraryapi.controller.dto.ResultadoPesquisaLivroDTO;
 import com.carloshsrosa.libraryapi.controller.mappers.LivroMapper;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @RestController

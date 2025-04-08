@@ -2,18 +2,13 @@ package com.carloshsrosa.libraryapi.controller;
 
 import com.carloshsrosa.libraryapi.controller.dto.AutorDTO;
 import com.carloshsrosa.libraryapi.controller.dto.AutorDTOResposta;
-import com.carloshsrosa.libraryapi.controller.dto.ErroRespostaDTO;
 import com.carloshsrosa.libraryapi.controller.mappers.AutorMapper;
 import com.carloshsrosa.libraryapi.controller.mappers.AutorMapperResposta;
-import com.carloshsrosa.libraryapi.exceptions.AutorPossuiLivrosException;
-import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
-import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.service.AutorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
