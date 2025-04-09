@@ -4,10 +4,15 @@ import com.carloshsrosa.libraryapi.controller.dto.AutorDTO;
 import com.carloshsrosa.libraryapi.controller.dto.AutorDTOResposta;
 import com.carloshsrosa.libraryapi.controller.mappers.AutorMapper;
 import com.carloshsrosa.libraryapi.controller.mappers.AutorMapperResposta;
+import com.carloshsrosa.libraryapi.security.SecurityService;
 import com.carloshsrosa.libraryapi.service.AutorService;
+import com.carloshsrosa.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,6 +33,7 @@ public class AutorController implements GenericController {
     private AutorMapperResposta mapperResposta;
 
     @PostMapping
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> salvarAutor(@RequestBody @Valid AutorDTO autorDTO) {
         var autor = mapper.toEntity(autorDTO);
         service.salvarAutor(autor);
@@ -36,6 +42,7 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<AutorDTOResposta> consultarPorId(@PathVariable("id") String id) {
         var uuid = UUID.fromString(id);
         return service
@@ -47,6 +54,7 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<List<AutorDTOResposta>> consultarPorParametros(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
@@ -63,6 +71,7 @@ public class AutorController implements GenericController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<AutorDTOResposta> atualiza(@PathVariable("id") String id, @RequestBody @Valid AutorDTO autorDTO) {
         return service
                 .consultarPorId(UUID.fromString(id))
@@ -75,6 +84,7 @@ public class AutorController implements GenericController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Object> deletarPorId(@PathVariable("id") String id) {
         return service.consultarPorId(UUID.fromString(id))
                 .map(autor -> {

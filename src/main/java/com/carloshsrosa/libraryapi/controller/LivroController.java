@@ -12,6 +12,7 @@ import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class LivroController implements GenericController {
     private LivroMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> cadastraLivro(@RequestBody @Valid CadastroLivroDTO livroDTO){
         var livro = mapper.toEntity(livroDTO);
         service.salvarLivro(livro);
@@ -38,6 +40,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<ResultadoPesquisaLivroDTO> consultaPorId(@PathVariable("id") String id){
         return service
                 .consultarPorId(UUID.fromString(id))
@@ -49,6 +52,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Page<ResultadoPesquisaLivroDTO>> consultarPorParametros(
             @RequestParam(value = "isbn", required = false) String isbn,
             @RequestParam(value = "titulo", required = false) String titulo,
@@ -66,6 +70,7 @@ public class LivroController implements GenericController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<?> atualiza(
             @PathVariable("id") String id,
             @RequestBody @Valid CadastroLivroDTO livroDTO){
@@ -87,6 +92,7 @@ public class LivroController implements GenericController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> delelaLivro(@PathParam("id") String id) {
         return service.consultarPorId(UUID.fromString(id))
                 .map(livro -> {

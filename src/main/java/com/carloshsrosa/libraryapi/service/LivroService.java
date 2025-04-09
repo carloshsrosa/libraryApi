@@ -3,6 +3,7 @@ package com.carloshsrosa.libraryapi.service;
 import com.carloshsrosa.libraryapi.model.GeneroLivro;
 import com.carloshsrosa.libraryapi.model.Livro;
 import com.carloshsrosa.libraryapi.repository.LivroRepository;
+import com.carloshsrosa.libraryapi.security.SecurityService;
 import com.carloshsrosa.libraryapi.validator.LivroValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,12 @@ public class LivroService {
     @Autowired
     private LivroValidator validator;
 
+    @Autowired
+    private SecurityService securityService;
+
     public Livro salvarLivro(Livro livro) {
         validator.validar(livro);
+        livro.setUsuario(securityService.obterUsuarioLogado());
         return repository.save(livro);
     }
 

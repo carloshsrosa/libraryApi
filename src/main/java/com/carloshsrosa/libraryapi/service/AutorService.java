@@ -4,6 +4,7 @@ import com.carloshsrosa.libraryapi.exceptions.AutorPossuiLivrosException;
 import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
 import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
+import com.carloshsrosa.libraryapi.security.SecurityService;
 import com.carloshsrosa.libraryapi.validator.AutorPossuiLivrosValidator;
 import com.carloshsrosa.libraryapi.validator.AutorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,14 @@ public class AutorService {
     @Autowired
     private AutorPossuiLivrosValidator livrosValidator;
 
+    @Autowired
+    private SecurityService securityService;
+
     public Autor salvarAutor(Autor autor) {
         if (validator.validar(autor)){
             throw new RegistroDuplicadoException("Autor já existente");
         }
+        autor.setUsuario(securityService.obterUsuarioLogado());
         return repository.save(autor);
     }
 
