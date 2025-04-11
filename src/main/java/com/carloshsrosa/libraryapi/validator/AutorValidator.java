@@ -2,7 +2,7 @@ package com.carloshsrosa.libraryapi.validator;
 
 import com.carloshsrosa.libraryapi.model.Autor;
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class AutorValidator {
 
-    @Autowired
-    private AutorRepository repository;
+    private final AutorRepository repository;
 
     public boolean validar(Autor autor){
         ExampleMatcher matcher = ExampleMatcher

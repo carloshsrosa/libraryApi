@@ -4,15 +4,11 @@ import com.carloshsrosa.libraryapi.controller.dto.AutorDTO;
 import com.carloshsrosa.libraryapi.controller.dto.AutorDTOResposta;
 import com.carloshsrosa.libraryapi.controller.mappers.AutorMapper;
 import com.carloshsrosa.libraryapi.controller.mappers.AutorMapperResposta;
-import com.carloshsrosa.libraryapi.security.SecurityService;
 import com.carloshsrosa.libraryapi.service.AutorService;
-import com.carloshsrosa.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,16 +17,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("autores")
+@RequiredArgsConstructor
 public class AutorController implements GenericController {
 
-    @Autowired
-    private AutorService service;
+    private final AutorService service;
 
-    @Autowired
-    private AutorMapper mapper;
+    private final AutorMapper mapper;
 
-    @Autowired
-    private AutorMapperResposta mapperResposta;
+    private final AutorMapperResposta mapperResposta;
 
     @PostMapping
     @PreAuthorize("hasRole('GERENTE')")

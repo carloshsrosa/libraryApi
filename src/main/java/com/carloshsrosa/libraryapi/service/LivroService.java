@@ -5,7 +5,7 @@ import com.carloshsrosa.libraryapi.model.Livro;
 import com.carloshsrosa.libraryapi.repository.LivroRepository;
 import com.carloshsrosa.libraryapi.security.SecurityService;
 import com.carloshsrosa.libraryapi.validator.LivroValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,16 +17,14 @@ import java.util.UUID;
 import static com.carloshsrosa.libraryapi.repository.specs.LivroSpecs.*;
 
 @Service
+@RequiredArgsConstructor
 public class LivroService {
 
-    @Autowired
-    private LivroRepository repository;
+    private final LivroRepository repository;
 
-    @Autowired
-    private LivroValidator validator;
+    private final LivroValidator validator;
 
-    @Autowired
-    private SecurityService securityService;
+    private final SecurityService securityService;
 
     public Livro salvarLivro(Livro livro) {
         validator.validar(livro);

@@ -1,20 +1,20 @@
 package com.carloshsrosa.libraryapi.security;
 
 import com.carloshsrosa.libraryapi.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+@RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    @Autowired
-    private UsuarioService service;
+    private final UsuarioService service;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        var usuario = service.obterLogin(login);
+        var usuario = service.obterPorLogin(login);
 
         if(usuario == null){
             throw new UsernameNotFoundException("Usuário não encontrado!");

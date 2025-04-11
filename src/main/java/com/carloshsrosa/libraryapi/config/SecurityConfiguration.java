@@ -1,6 +1,7 @@
 package com.carloshsrosa.libraryapi.config;
 
 import com.carloshsrosa.libraryapi.security.CustomUserDetailService;
+import com.carloshsrosa.libraryapi.security.LoginSocialSuccessHandler;
 import com.carloshsrosa.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +25,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            LoginSocialSuccessHandler successHandler) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(configurer -> {
@@ -35,6 +39,11 @@ public class SecurityConfiguration {
                     authorize.requestMatchers("/login").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
                     authorize.anyRequest().authenticated();
+                })
+                .oauth2Login(oauth2 -> {
+                    oauth2
+                            .loginPage("/login")
+                            .successHandler(successHandler);
                 })
                 .build();
 //        authorize.requestMatchers(HttpMethod.POST, "/autores/**").hasAuthority("CADASTRAR_AUTOR");
@@ -52,28 +61,27 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
+    @Bean
+    public GrantedAuthorityDefaults grantedAuthorityDefaults(){
+        return new GrantedAuthorityDefaults("");
+    }
+
 //    login utilizando usuarios na memória
 //    @Bean
-//    public UserDetailsService userDetailsServiceInMemory(PasswordEncoder encoder) {
-//
-//        var user = User.builder()
-//                .username("user")
-//                .password(encoder.encode("123"))
-//                .roles("USER")
-//                .build();
-//
-//        var admin = User.builder()
-//                .username("admin")
-//                .password(encoder.encode("321"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
+    public UserDetailsService userDetailsServiceInMemory(PasswordEncoder encoder) {
 
-    //    login utilizando usuarios do banco de dados
-    @Bean
-    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
-            return new CustomUserDetailService();
+        var user = User.builder()
+                .username("user")
+                .password(encoder.encode("123"))
+                .roles("USER")
+                .build();
+
+        var admin = User.builder()
+                .username("admin")
+                .password(encoder.encode("321"))
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, admin);
     }
 }

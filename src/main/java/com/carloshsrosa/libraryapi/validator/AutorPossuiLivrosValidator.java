@@ -2,19 +2,18 @@ package com.carloshsrosa.libraryapi.validator;
 
 import com.carloshsrosa.libraryapi.repository.AutorRepository;
 import com.carloshsrosa.libraryapi.repository.LivroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class AutorPossuiLivrosValidator {
 
-    @Autowired
-    private AutorRepository autorRepository;
+    private final AutorRepository autorRepository;
 
-    @Autowired
-    private LivroRepository livroRepository;
+    private final LivroRepository livroRepository;
 
     public boolean validar(UUID uuid){
         var autor = autorRepository.findById(uuid);

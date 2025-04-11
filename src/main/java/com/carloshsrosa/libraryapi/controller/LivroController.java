@@ -9,7 +9,7 @@ import com.carloshsrosa.libraryapi.service.AutorService;
 import com.carloshsrosa.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,16 +19,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("livros")
+@RequiredArgsConstructor
 public class LivroController implements GenericController {
 
-    @Autowired
-    private LivroService service;
+    private final LivroService service;
 
-    @Autowired
-    private AutorService autorService;
+    private final AutorService autorService;
 
-    @Autowired
-    private LivroMapper mapper;
+    private final LivroMapper mapper;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")

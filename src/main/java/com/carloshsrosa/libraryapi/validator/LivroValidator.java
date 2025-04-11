@@ -4,14 +4,14 @@ import com.carloshsrosa.libraryapi.exceptions.CampoInvalidoException;
 import com.carloshsrosa.libraryapi.exceptions.RegistroDuplicadoException;
 import com.carloshsrosa.libraryapi.model.Livro;
 import com.carloshsrosa.libraryapi.repository.LivroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class LivroValidator {
 
-    @Autowired
-    private LivroRepository repository;
+    private final LivroRepository repository;
 
     private static final int ANO_EXIGENCIA_PRECO = 2020;
 

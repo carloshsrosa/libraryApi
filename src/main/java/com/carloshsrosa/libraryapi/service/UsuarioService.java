@@ -2,18 +2,17 @@ package com.carloshsrosa.libraryapi.service;
 
 import com.carloshsrosa.libraryapi.model.Usuario;
 import com.carloshsrosa.libraryapi.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository repository;
+    private final UsuarioRepository repository;
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
     public void salvarUsuario(Usuario usuario){
         var senha = usuario.getSenha();
@@ -21,7 +20,11 @@ public class UsuarioService {
         repository.save(usuario);
     }
 
-    public Usuario obterLogin(String login){
+    public Usuario obterPorLogin(String login){
         return repository.findByLogin(login);
+    }
+
+    public Usuario obterPorEmail(String email){
+        return repository.findByEmail(email);
     }
 }
