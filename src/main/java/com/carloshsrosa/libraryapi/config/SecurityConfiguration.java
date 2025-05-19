@@ -1,8 +1,6 @@
 package com.carloshsrosa.libraryapi.config;
 
-import com.carloshsrosa.libraryapi.security.CustomUserDetailService;
 import com.carloshsrosa.libraryapi.security.LoginSocialSuccessHandler;
-import com.carloshsrosa.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,11 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -45,20 +40,10 @@ public class SecurityConfiguration {
                             .loginPage("/login")
                             .successHandler(successHandler);
                 })
+                .oauth2ResourceServer(
+                        oauth2Rs -> oauth2Rs
+                                .jwt(Customizer.withDefaults()))
                 .build();
-//        authorize.requestMatchers(HttpMethod.POST, "/autores/**").hasAuthority("CADASTRAR_AUTOR");
-//        authorize.requestMatchers(HttpMethod.POST, "/autores/**").hasRole("ADMIN");
-//        authorize.requestMatchers(HttpMethod.DELETE, "/autores/**").hasRole("ADMIN");
-//        authorize.requestMatchers(HttpMethod.PUT, "/autores/**").hasRole("ADMIN");
-//        authorize.requestMatchers(HttpMethod.GET, "/autores/**").hasAnyRole("USER", "ADMIN");
-//        authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
-//                .formLogin(Customizer.withDefaults())
-//                .formLogin(configurer -> configurer.loginPage("/login.html").successForwardUrl("/home.html"))
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder(10);
     }
 
     @Bean
@@ -66,22 +51,14 @@ public class SecurityConfiguration {
         return new GrantedAuthorityDefaults("");
     }
 
-//    login utilizando usuarios na memória
-//    @Bean
-    public UserDetailsService userDetailsServiceInMemory(PasswordEncoder encoder) {
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter(){
+        var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        authoritiesConverter.setAuthorityPrefix("");
 
-        var user = User.builder()
-                .username("user")
-                .password(encoder.encode("123"))
-                .roles("USER")
-                .build();
-
-        var admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("321"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+        return converter;
     }
+
 }
