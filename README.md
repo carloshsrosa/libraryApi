@@ -1,5 +1,3 @@
-# libraryApi
-
 # 📚 Library API
 
 A `Library API` é uma aplicação RESTful desenvolvida em Java com Spring Boot, que permite gerenciar um acervo de livros e autores. O projeto tem como objetivo servir como base para estudos de arquitetura de microsserviços, testes automatizados, boas práticas com Spring, e integração com banco de dados relacional.
